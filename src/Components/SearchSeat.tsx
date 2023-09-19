@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
+import styled from "styled-components";
+import tw from "twin.macro";
+
 import SeatItem from "./SeatItem";
 
 const SearchSeat: React.FC = () => {
@@ -19,7 +22,7 @@ const SearchSeat: React.FC = () => {
       info1: "Ahmet Mehmet",
       info2: "Bilecik",
       info3: "İstanbul",
-      info4: "15:00",
+      info4: "23/05/2022 - 15:00",
       info5: "Yes",
       info6: "09:55",
     },
@@ -53,38 +56,39 @@ const SearchSeat: React.FC = () => {
   ];
 
   return (
-    <>
-      <div className="relative flex flex-col min-w-0 break-words bg-white w-full  shadow-lg rounded">
-        <div className="px-4 py-2 flex-auto">
-          <div className="tab-content tab-space">
-            <div className="w-96 border-2 rounded-md">
-              <Datepicker
-                primaryColor={"indigo"}
-                minDate={new Date()}
-                value={value}
-                useRange={false}
-                displayFormat={"DD/MM/YYYY"}
-                onChange={handleValueChange}
-              />
-            </div>
+    <Container>
+      <DatePickerStyle>
+        <Datepicker
+          primaryColor={"indigo"}
+          minDate={new Date()}
+          value={value}
+          useRange={false}
+          displayFormat={"DD/MM/YYYY"}
+          onChange={handleValueChange}
+        />
+      </DatePickerStyle>
 
-            {TrashseatData.map((seat) => (
-              <SeatItem
-                key={seat.id}
-                id={seat.id}
-                name_surname={seat.info1}
-                departure_place={seat.info2}
-                departure_time={seat.info4}
-                destination={seat.info3}
-                smoke={seat.info5}
-                estimated_arrival={seat.info6}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </>
+      {TrashseatData.map((seat) => (
+        <SeatItem
+          key={seat.id}
+          id={seat.id}
+          name_surname={seat.info1}
+          departure_place={seat.info2}
+          departure_time={seat.info4}
+          destination={seat.info3}
+          smoke={seat.info5}
+          estimated_arrival={seat.info6}
+        />
+      ))}
+    </Container>
   );
 };
 
 export default SearchSeat;
+
+const Container = styled.div`
+  ${tw`relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded px-4 py-6 flex-auto `}
+`;
+const DatePickerStyle = styled.div`
+  ${tw`w-96 border-2 rounded-md`}
+`;

@@ -1,7 +1,10 @@
 import React from "react";
 import { BsArrowRightCircle } from "react-icons/bs";
-import userIcon from "../assets/userIcon.png";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import tw from "twin.macro";
+
+import userIcon from "../assets/userIcon.png";
 
 interface ItemProps {
   id: number;
@@ -21,86 +24,101 @@ const SeatItem: React.FC<ItemProps> = ({
   destination,
   smoke,
   estimated_arrival,
-  
 }) => {
   const navigate = useNavigate();
   return (
-    <div className="flex items-center bg-white rounded-lg shadow-gray-300 shadow-custominner p-3 space-x-4 my-3 hover:transform hover:scale-101 transition-transform">
-      <div className="flex-shrink-0">
-        <img
-          src={userIcon}
-          alt="Kullanıcı Resmi"
-          className="w-16 h-16 rounded-full mx-auto"
-        />
-      </div>
-      <div className="flex-grow">
-        <div className="flex pl-4 space-x-4 text-center">
+    <Container>
+      <UserImage src={userIcon} alt="Default User Picture" />
+      <InfoContainer>
+        <InfoWrapper>
           <div>
-            <div className="text-base text-slate-700 font-semibold bg-white rounded-lg shadow-md px-6  uppercase">
-              Name Surname
-            </div>
-            <div className="text-neutral-600 font-semibold text-center mt-2">
-              {name_surname}
-            </div>
+            <Title>Name Surname</Title>
+            <Info>{name_surname}</Info>
           </div>
           <div>
-            <div className="text-base font-semibold bg-white rounded-lg shadow-md px-6 uppercase">
-              Departure Place
-            </div>
-            <div className="text-neutral-600 font-semibold text-center mt-2">
-              {departure_place}
-            </div>
+            <Title>Departure Place</Title>
+            <Info>{departure_place}</Info>
           </div>
           <div>
-            <div className="text-base font-semibold bg-white rounded-lg shadow-md px-6 uppercase">
-              Departure Time
-            </div>
-            <div className="text-neutral-600 font-semibold text-center mt-2">
-              {departure_time}
-            </div>
+            <Title>Departure Time</Title>
+            <Info>{departure_time}</Info>
           </div>
           <div>
-            <div className="text-base font-semibold bg-white rounded-lg shadow-md px-6 uppercase">
-              Destination
-            </div>
-            <div className=" text-neutral-600 font-semibold text-center mt-2">
-              {destination}
-            </div>
+            <Title>Destination</Title>
+            <Info>{destination}</Info>
           </div>
           <div>
-            <div className="text-base font-semibold bg-white rounded-lg shadow-md px-6 uppercase">
-              Smoke
-            </div>
-            <div className=" text-neutral-600 font-semibold text-center mt-2">
-              {smoke}
-            </div>
+            <Title>Smoking Allowed</Title>
+            <Info>{smoke}</Info>
           </div>
           <div>
-            <div className="text-base font-semibold bg-white rounded-lg shadow-md px-6 uppercase">
-              Estimated Arrival
-            </div>
-            <div className="text-neutral-600 font-semibold text-center mt-2">
-              {estimated_arrival}
-            </div>
+            <Title>Estimated Arrival</Title>
+            <Info>{estimated_arrival}</Info>
           </div>
-          <div className="flex-shrink-0 pl-20">
-          
-            <button
-              className="flex justify-center items-center text-indigo-500 border border-indigo-500 hover:bg-indigo-500 hover:text-white active:bg-indigo-600 font-bold uppercase text-base px-6 py-3 rounded-full outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          <RentButtonDiv>
+            <RentButton
               type="button"
-              onClick={() => {navigate(`/rentseat/${id}`, {replace:true, state:{name_surname,departure_place,departure_time,destination,smoke, estimated_arrival}})}}
+              onClick={() => {
+                navigate(`/rentseat/${id}`, {
+                  replace: true,
+                  state: {
+                    name_surname,
+                    departure_place,
+                    departure_time,
+                    destination,
+                    smoke,
+                    estimated_arrival,
+                  },
+                });
+              }}
             >
               <span className="mr-1">
                 <BsArrowRightCircle size={25} />
               </span>{" "}
               Rent
-            </button>
-            
-          </div>
-        </div>
-      </div>
-    </div>
+            </RentButton>
+          </RentButtonDiv>
+        </InfoWrapper>
+      </InfoContainer>
+    </Container>
   );
 };
 
 export default SeatItem;
+
+const Container = styled.div`
+  &:hover {
+    ${tw`transform scale-101`}
+  }
+  ${tw`container flex items-center bg-white rounded-lg shadow-gray-300 shadow-custominner p-3 space-x-4 my-3 transition-transform`}
+`;
+
+const UserImage = styled.img`
+  ${tw`w-16 h-16 rounded-full mx-auto`}
+`;
+
+const InfoContainer = styled.div`
+  ${tw`grow`}
+`;
+
+const InfoWrapper = styled.div`
+  ${tw`flex pl-4 space-x-3 text-center`}
+`;
+
+const Title = styled.div`
+  ${tw`text-base font-semibold bg-white rounded-lg shadow-md px-6 uppercase`}
+`;
+const Info = styled.div`
+  ${tw`text-neutral-600 font-semibold text-center mt-2`}
+`;
+
+const RentButtonDiv = styled.div`
+  ${tw`pl-20`}
+`;
+
+const RentButton = styled.button`
+  &:hover {
+    ${tw`bg-indigo-500 text-white`}
+  }
+  ${tw`flex justify-center items-center  text-indigo-500 border border-indigo-500 font-bold uppercase  text-base px-6 py-3 rounded-full outline-none mb-1 ease-linear transition-all duration-150`}
+`;

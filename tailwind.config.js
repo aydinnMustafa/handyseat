@@ -14,6 +14,9 @@ export default {
       },
       scale: {
         '101': '1.01'
+      },
+      height: {
+        'customHeight': '378px'
       }
     },
   },

@@ -6,18 +6,24 @@ import RentMySeat from "./Components/RentMySeat";
 import TabMenu from "./Components/TabMenu";
 import Navbar from "./Components/Navbar";
 
+import { AppDataProvider } from "./context/AppDataContext";
+import Footer from "./Components/Footer";
+
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <TabMenu />
-      <Routes>
-        <Route path="/" element={<SearchSeat />} />
-        <Route path="/searchseat" element={<SearchSeat />} />
-        <Route path="/rentseat/:id" element={<RentSeat />} />
-        <Route path="/rentmyseat" element={<RentMySeat />} />
-      </Routes>
-    </BrowserRouter>
+    <AppDataProvider>
+      <BrowserRouter>
+        <Navbar />
+        <TabMenu />
+        <Routes>
+          <Route path="/" element={<SearchSeat />} />
+          <Route path="/searchseat" element={<SearchSeat />} />
+          <Route path="/rentseat/:id" element={<RentSeat />} />
+          <Route path="/rentmyseat" element={<RentMySeat />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </AppDataProvider>
   );
 };
 
