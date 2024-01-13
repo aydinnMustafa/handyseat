@@ -87,7 +87,7 @@ const SearchSeat: React.FC = () => {
 export default SearchSeat;
 
 const Container = styled.div`
-  ${tw`relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded px-4 py-6 flex-auto `}
+  ${tw`relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded px-4 py-6 flex-auto`}
 `;
 const DatePickerStyle = styled.div`
   ${tw`w-96 border-2 rounded-md`}

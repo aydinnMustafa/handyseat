@@ -39,7 +39,7 @@ const SeatDetails: React.FC = () => {
         <Label>Departure Place</Label>
         <InformationDiv>{seatFormData.departurePlace}</InformationDiv>
         <Label>Departure Time</Label>
-        <InformationDiv>{seatFormData.departureTime.toLocaleDateString()}</InformationDiv>
+        <InformationDiv>{seatFormData.departureTime && seatFormData.departureTime.toLocaleDateString()}</InformationDiv>
         <Label>Destination</Label>
         <InformationDiv>{seatFormData.destination}</InformationDiv>
         <Label>Estimated Arrival</Label>
@@ -52,7 +52,7 @@ const SeatDetails: React.FC = () => {
 export default SeatDetails;
 
 const Container = styled.div`
-  ${tw`flex h-customHeight justify-center items-center`}
+  ${tw`flex h-96 justify-center items-center`}
 `;
 
 const Label = styled.label`
@@ -68,5 +68,5 @@ const TitleP = styled.p`
 `;
 
 const GridDiv = styled.div`
-  ${tw`w-1/4 p-4`}
+  ${tw`lg:w-1/4 p-4`}
 `;

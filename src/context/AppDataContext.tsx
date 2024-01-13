@@ -11,6 +11,7 @@ interface UserFormData {
   age: number;
   havePet: string;
   extraTextArea: string; // Maybe you could consider making a string within an array. NOTICE
+  isSubmit: boolean;
 }
 
 interface SeatFormData {
@@ -27,7 +28,7 @@ interface SeatFormData {
   travelingPeopleQuantity: number;
 
   departurePlace: string;
-  departureTime: Date;
+  departureTime: null | Date;
   destination: string;
   estimatedArrival: number;
 }
@@ -52,6 +53,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     age: 0,
     havePet: "No",
     extraTextArea: "",
+    isSubmit: false
   });
   const [seatFormData, setSeatFormData] = useState<SeatFormData>({
     name: "",

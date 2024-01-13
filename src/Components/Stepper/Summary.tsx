@@ -82,7 +82,7 @@ const TitlePRight = styled.p`
 `;
 
 const Container = styled.div`
-  ${tw`flex h-customHeight justify-center items-center`}
+  ${tw`flex h-96 justify-center items-center`}
 `;
 
 const GridDiv = styled.div`

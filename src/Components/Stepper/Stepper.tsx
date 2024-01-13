@@ -23,7 +23,6 @@ const Stepper: React.FC<StepperProps> = ({rentSeat}) => {
           <Step $focused={currentStep === 1}>
             <StepIcon>
               <MdContentPasteSearch color={"#4f5250"} size={45} />
-              {/* BÜTÜN İCONLARI BUNUN GİBİ YAP  */}
             </StepIcon>
             <StepBody $focused={currentStep === 1}>
               <StepTitle>Details of the Seat</StepTitle>
@@ -41,7 +40,6 @@ const Stepper: React.FC<StepperProps> = ({rentSeat}) => {
           <Step $focused={currentStep === 2}>
             <StepIcon>
               <BsFillPersonVcardFill color={"#4f5250"} size={45} />
-              {/* BÜTÜN İCONLARI BUNUN GİBİ YAP  */}
             </StepIcon>
             <StepBody $focused={currentStep === 2}>
               <StepTitle> Your Info</StepTitle>
@@ -59,7 +57,6 @@ const Stepper: React.FC<StepperProps> = ({rentSeat}) => {
           <Step $focused={currentStep === 3}>
             <StepIcon>
               <BiSolidBriefcase color={"#4f5250"} size={45} />
-              {/* BÜTÜN İCONLARI BUNUN GİBİ YAP  */}
             </StepIcon>
             <StepBody $focused={currentStep === 3}>
               <StepTitle>Summary</StepTitle>
@@ -170,7 +167,6 @@ const NavigationButton = styled.button`
   }
   ${tw`flex [min-width: 15ch] justify-center items-center text-indigo-500 border border-indigo-500 font-bold uppercase  text-base px-4 py-2 mr-2 rounded outline-none mb-1 ease-linear transition-colors duration-150`}
 `;
-// ${({ isprevious }) => isprevious ? tw`bg-gray-200` : undefined}
 
 // <----- Confirm Modal Styles ----->
 const ModelContainer = styled.div<{ $visible: boolean }>`

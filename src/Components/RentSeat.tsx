@@ -10,7 +10,6 @@ const RentSeat: React.FC = () => {
 const rentSeat = () => {
   console.log('rentSeat Function');
 };
-
  
   return (
     <Container>

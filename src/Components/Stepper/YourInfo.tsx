@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useAppDataContext } from "../../context/AppDataContext";
 
 const YourInfo: React.FC = () => {
   const { userFormData, updateUserForm } = useAppDataContext();
+  const [errors, setErrors] = useState<{ [key: string]: string | null }>({});
+
+  const validateInput = (name: string, value: any) => {
+    if (name === "name" && !value) {
+      return "Name is required";
+    }
+    if (name === "surname" && !value) {
+      return "Surname is required";
+    }
+    if (name === "age" && value < 18) {
+      return "You must be over 18 years of age.";
+    }
+    if (name === "email" && !value) {
+      return "Email cannot be empty.";
+    }
+    if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return "Incorrect E-mail address.";
+    }
+    return null;
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -15,21 +35,29 @@ const YourInfo: React.FC = () => {
     const { name, value } = e.target;
 
     updateUserForm({ ...userFormData, [name]: value });
+
+    const error = validateInput(name, value);
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
+
   console.log(userFormData);
+
   return (
     <>
       <Container>
         {/* First four inputs */}
         <GridDiv>
           <Label>Name</Label>
+          {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
           <Input
             type="text"
             name="name"
             value={userFormData.name}
             onChange={handleChange}
             placeholder="Name"
+            $error={!!errors.name}
           />
+
           <Label>Gender</Label>
           <Select
             name="gender"
@@ -41,14 +69,18 @@ const YourInfo: React.FC = () => {
             <Option value="Other">Other</Option>
           </Select>
           <Label>Email Address</Label>
+          {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
           <Input
             type="text"
             name="email"
             value={userFormData.email}
             onChange={handleChange}
             placeholder="Email Address"
+            $error={!!errors.email}
           />
+
           <Label>Age</Label>
+          {errors.age && <ErrorMessage>{errors.age}</ErrorMessage>}
           <Input
             type="number"
             name="age"
@@ -60,24 +92,31 @@ const YourInfo: React.FC = () => {
         {/* Second four inputs */}
         <GridDiv>
           <Label>Surname</Label>
+          {errors.surname && <ErrorMessage>{errors.surname}</ErrorMessage>}
           <Input
             type="text"
             name="surname"
             value={userFormData.surname}
             onChange={handleChange}
             placeholder="Surname"
+            $error={!!errors.surname}
           />
           <Label>How many bags do you have?</Label>
+          <RangeDiv>
           <Input
-            type="number"
+            type="range"
+            min={0}
+            max={5}
             name="bagQuantity"
             value={userFormData.bagQuantity}
             onChange={handleChange}
             placeholder="Number of Bags"
           />
+          <Label>{userFormData.bagQuantity}</Label>
+          </RangeDiv>
           <Label>Cellphone Number</Label>
           <Input
-            type="number"
+            type="text"
             name="phoneNumber"
             value={userFormData.phoneNumber}
             onChange={handleChange}
@@ -113,7 +152,7 @@ const YourInfo: React.FC = () => {
 export default YourInfo;
 
 const Container = styled.div`
-  ${tw`flex h-customHeight justify-center items-center`}
+  ${tw`flex h-96 justify-center items-center`}
 `;
 
 const GridDiv = styled.div`
@@ -124,7 +163,11 @@ const Label = styled.label`
   ${tw`block mb-1 font-semibold`}
 `;
 
-const Input = styled.input`
+const RangeDiv = styled.div`
+  ${tw`flex`}
+`;
+
+const Input = styled.input<{ $error?: boolean }>`
   &:hover {
     ${tw`border-blue-500`}
   }
@@ -134,7 +177,8 @@ const Input = styled.input`
   &:active {
     ${tw`ring ring-blue-500/40`}
   }
-  ${tw`w-full h-10 mb-4 p-2 rounded-lg border border-gray-300 px-2`}
+  ${({ $error }) => ($error ? tw`border-red-600` : tw`border-gray-300`)}
+  ${tw`w-full h-10 mb-5 p-2 rounded-lg border px-2`}
 `;
 
 const Select = styled.select`
@@ -147,7 +191,7 @@ const Select = styled.select`
   &:active {
     ${tw`ring ring-blue-500/40`}
   }
-  ${tw`w-full p-2 mb-4 border border-gray-300 rounded-lg`}
+  ${tw`w-full p-2 mb-5 border border-gray-300 rounded-lg`}
 `;
 
 const Option = styled.option`
@@ -159,4 +203,8 @@ const Textarea = styled.textarea`
     ${tw`outline-none ring ring-blue-500/40`}
   }
   ${tw`w-96 h-72 p-2 border border-gray-300 rounded-lg resize-none`}
+`;
+
+const ErrorMessage = styled.div`
+  ${tw`text-red-400 absolute mt-10 ml-2`}
 `;

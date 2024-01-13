@@ -16,7 +16,7 @@ export default {
         '101': '1.01'
       },
       height: {
-        'customHeight': '378px'
+        'customHeight': '378px',
       }
     },
   },

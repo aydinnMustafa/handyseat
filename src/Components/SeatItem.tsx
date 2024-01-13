@@ -59,17 +59,7 @@ const SeatItem: React.FC<ItemProps> = ({
             <RentButton
               type="button"
               onClick={() => {
-                navigate(`/rentseat/${id}`, {
-                  replace: true,
-                  state: {
-                    name_surname,
-                    departure_place,
-                    departure_time,
-                    destination,
-                    smoke,
-                    estimated_arrival,
-                  },
-                });
+                navigate(`/rentseat/${id}`);
               }}
             >
               <span className="mr-1">
@@ -90,7 +80,7 @@ const Container = styled.div`
   &:hover {
     ${tw`transform scale-101`}
   }
-  ${tw`container flex items-center bg-white rounded-lg shadow-gray-300 shadow-custominner p-3 space-x-4 my-3 transition-transform`}
+  ${tw`container flex flex-col xl:flex-row items-center bg-white rounded-lg shadow-gray-300 shadow-custominner p-3 xl:space-x-4 my-3 transition-transform`}
 `;
 
 const UserImage = styled.img`
@@ -102,7 +92,7 @@ const InfoContainer = styled.div`
 `;
 
 const InfoWrapper = styled.div`
-  ${tw`flex pl-4 space-x-3 text-center`}
+  ${tw`flex flex-col xl:flex-row pl-4 space-x-3 text-center`}
 `;
 
 const Title = styled.div`
@@ -113,12 +103,12 @@ const Info = styled.div`
 `;
 
 const RentButtonDiv = styled.div`
-  ${tw`pl-20`}
+  ${tw`xl:pl-20 mt-2`} // mt-2 eklendi
 `;
 
 const RentButton = styled.button`
   &:hover {
     ${tw`bg-indigo-500 text-white`}
   }
-  ${tw`flex justify-center items-center  text-indigo-500 border border-indigo-500 font-bold uppercase  text-base px-6 py-3 rounded-full outline-none mb-1 ease-linear transition-all duration-150`}
+  ${tw`flex justify-center items-center  text-indigo-500 border border-indigo-500 font-bold uppercase text-base px-20 py-1 lg:px-6 lg:py-3 rounded-full outline-none mb-1 ease-linear transition-all duration-150`} // px-20 py-1 değişti
 `;
