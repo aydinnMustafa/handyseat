@@ -1,85 +1,110 @@
-import React, { useState } from "react";
-import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Datepicker, {
+  DateRangeType,
+  DateValueType,
+} from "react-tailwindcss-datepicker";
 import styled from "styled-components";
 import tw from "twin.macro";
-
+import ReactPaginate from "react-paginate";
 import SeatItem from "./SeatItem";
 
-const SearchSeat: React.FC = () => {
-  const [value, setValue] = useState<DateValueType>({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
+interface SeatItem {
+  id: number;
+  name: string;
+  surname: string;
+  gender: string;
+  age: number;
+  email: string;
+  phoneNumber: number;
 
-  const handleValueChange = (newValue: DateValueType) => {
-    console.log("newValue:", newValue);
-    setValue(newValue);
+  carModel: string;
+  carType: string;
+  smokeAllow: boolean;
+  travelingPeopleQuantity: number;
+
+  departurePlace: string;
+  departureTime: Date;
+  destination: string;
+  estimatedArrival: number;
+}
+
+const SearchSeat: React.FC = () => {
+  const [searchDate, setSearchDate] = useState<DateRangeType>({
+    startDate: null,
+    endDate: null,
+  });
+  const [data, setData] = useState<SeatItem[]>([]);
+  const [pageCount, setPageCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  const handleValueChange = (newDate: DateValueType) => {
+    newDate !== null ? setSearchDate(newDate) : null; // If date is not null, we assign it to states
   };
 
-  const TrashseatData = [
-    {
-      id: 1,
-      info1: "Ahmet Mehmet",
-      info2: "Bilecik",
-      info3: "İstanbul",
-      info4: "23/05/2022 - 15:00",
-      info5: "Yes",
-      info6: "09:55",
-    },
-    {
-      id: 2,
-      info1: "Mehmet Kehribar",
-      info2: "Kayseri",
-      info3: "Ankara",
-      info4: "15:00",
-      info5: "No",
-      info6: "22:55",
-    },
-    {
-      id: 3,
-      info1: "Samet Uçan",
-      info2: "Bilecik",
-      info3: "İstanbul",
-      info4: "15:00",
-      info5: "Yes",
-      info6: "18:30",
-    },
-    {
-      id: 4,
-      info1: "Mustafa Aydın",
-      info2: "Bilecik",
-      info3: "Dünya",
-      info4: "15:00",
-      info5: "No",
-      info6: "08:20",
-    },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]); // It will run every time currentPage changes
+
+  const fetchData = async () => {
+    try {
+      // If startDate is not null, we add searchDate to the request.
+      // We only need to check startDate. Since the date picker we use has a range, endDate is definitely selected as well.
+      const response = await axios.get(
+        `http://localhost:3000/api/seats?page=${currentPage + 1}&pageSize=5${
+          searchDate.startDate !== null
+            ? `&startDate=${searchDate.startDate?.toString()}&endDate=${searchDate.endDate?.toString()}`
+            : ""
+        }`
+      );
+      setData([]);
+      setData(response.data.seats);
+      setPageCount(response.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handlePageClick = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected);
+  };
 
   return (
     <Container>
-      <DatePickerStyle>
-        <Datepicker
-          primaryColor={"indigo"}
-          minDate={new Date()}
-          value={value}
-          useRange={false}
-          displayFormat={"DD/MM/YYYY"}
-          onChange={handleValueChange}
-        />
-      </DatePickerStyle>
-
-      {TrashseatData.map((seat) => (
+      <SearchContainer>
+        <DatePickerStyle>
+          <Datepicker
+            primaryColor={"indigo"}
+            minDate={new Date()}
+            value={searchDate}
+            useRange={true}
+            displayFormat={"DD/MM/YYYY"}
+            onChange={handleValueChange}
+          />
+        </DatePickerStyle>
+        <button onClick={fetchData}>TEST</button>
+      </SearchContainer>
+      {data.map((seat) => (
         <SeatItem
           key={seat.id}
           id={seat.id}
-          name_surname={seat.info1}
-          departure_place={seat.info2}
-          departure_time={seat.info4}
-          destination={seat.info3}
-          smoke={seat.info5}
-          estimated_arrival={seat.info6}
+          name_surname={seat.name + seat.surname}
+          departure_place={seat.departurePlace}
+          departure_time={new Date(seat.departureTime)} // Since the data comes as a string, we convert it to date.
+          destination={seat.destination}
+          smoke={seat.smokeAllow == true ? "Yes" : "No"}
+          estimated_arrival={seat.estimatedArrival.toString()}
         />
       ))}
+
+      <CustomReactPaginate
+        pageCount={pageCount}
+        pageRangeDisplayed={5}
+        marginPagesDisplayed={2}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination"}
+        activeClassName={"active"}
+      />
     </Container>
   );
 };
@@ -91,4 +116,11 @@ const Container = styled.div`
 `;
 const DatePickerStyle = styled.div`
   ${tw`w-96 border-2 rounded-md`}
+`;
+const CustomReactPaginate = styled(ReactPaginate)`
+  ${tw`flex justify-center space-x-4 font-bold`}
+`;
+
+const SearchContainer = styled.div`
+  ${tw`flex space-x-12 justify-center`}
 `;

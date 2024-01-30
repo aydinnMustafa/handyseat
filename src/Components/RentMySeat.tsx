@@ -7,6 +7,7 @@ import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 
 import { useAppDataContext } from "../context/AppDataContext";
+import axios from "axios";
 
 const RentMySeat: React.FC = () => {
   const { seatFormData, updateSeatForm } = useAppDataContext();
@@ -19,18 +20,46 @@ const RentMySeat: React.FC = () => {
     // Function that updates the value of our data according to input names
     const { name, value } = e.target;
 
-    updateSeatForm({ ...seatFormData, [name]: value });
+    //Since smokeAllow should be boolean, we convert the type according to the value.
+    const isAllowed = name === "smokeAllow" ? value === "Yes" : value;
+
+    updateSeatForm({ ...seatFormData, [name]: isAllowed });
   };
 
-  const handleDateTimeChange = (newDate: Date | null) => {
-    // Update the value of seatFormData
+  const handleDateTimeChange = (newDate: Date | null) => { // Since it is datetime, I created a special handler
+    // Update the departureTime value of seatFormData
     updateSeatForm({ ...seatFormData, departureTime: newDate });
   };
 
-const rentMySeatHandler = () => {
-    // I will write personal seat rent codes
-}
+  const rentMySeatHandler = async () => {
+    try {
+      await axios.post(
+        "http://localhost:3000/api/rentmyseat",
+        {
+          name: seatFormData.name,
+          surname: seatFormData.surname,
+          gender: seatFormData.gender,
+          age: seatFormData.age,
+          email: seatFormData.email,
+          phoneNumber: seatFormData.phoneNumber,
 
+          carModel: seatFormData.carModel,
+          carType: seatFormData.carType,
+          smokeAllow: seatFormData.smokeAllow,
+
+          travelingPeopleQuantity: seatFormData.travelingPeopleQuantity,
+          departurePlace: seatFormData.departurePlace,
+          departureTime: seatFormData.departureTime,
+          destination: seatFormData.destination,
+          estimatedArrival: seatFormData.estimatedArrival,
+        }
+      );
+    // WHAT TO DO IF THE POST IS SUCCESSFUL // WİLL BE ADDED
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  console.log(seatFormData);
   return (
     <>
       <PageDescriptionText>
@@ -178,7 +207,9 @@ const rentMySeatHandler = () => {
             In the last step, this information is shown to the person who will
             rent your seat.
           </InformationP>
-          <NavigationButton onClick={rentMySeatHandler} >Confirm</NavigationButton>
+          <NavigationButton onClick={rentMySeatHandler}>
+            Confirm
+          </NavigationButton>
         </GridDiv>
       </Container>
     </>

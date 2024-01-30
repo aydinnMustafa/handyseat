@@ -10,7 +10,7 @@ interface UserFormData {
   phoneNumber: number;
   age: number;
   havePet: string;
-  extraTextArea: string; // Maybe you could consider making a string within an array. NOTICE
+  extraTextArea: string;
   isSubmit: boolean;
 }
 

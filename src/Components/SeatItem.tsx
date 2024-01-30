@@ -10,7 +10,7 @@ interface ItemProps {
   id: number;
   name_surname: string;
   departure_place: string;
-  departure_time: string;
+  departure_time: Date;
   destination: string;
   smoke: string;
   estimated_arrival: string;
@@ -41,7 +41,7 @@ const SeatItem: React.FC<ItemProps> = ({
           </div>
           <div>
             <Title>Departure Time</Title>
-            <Info>{departure_time}</Info>
+            <Info>{departure_time.toLocaleString()}</Info>
           </div>
           <div>
             <Title>Destination</Title>

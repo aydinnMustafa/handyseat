@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 import dotenv from "dotenv";
 import { json } from "body-parser";
 import { seatRouter } from "./routes/seat";
@@ -8,6 +9,9 @@ dotenv.config();
 
 const app = express();
 app.use(json());
+
+app.use(cors());
+
 app.use(seatRouter);
 
 mongoose
