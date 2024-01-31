@@ -5,9 +5,11 @@ import { MdCarRental, MdOutlineAirlineSeatReclineExtra } from "react-icons/md";
 import styled from "styled-components";
 import tw from "twin.macro";
 
+import { useAppDataContext } from "../context/AppDataContext";
 import { useBeforeUnload } from "../hooks/useBeforeUnload";
 const TabMenu: React.FC = () => {
   const location = useLocation();
+  const { resetContextData } = useAppDataContext();
   const [isDirty, setIsDirty] = useState(false);
   const [openTab, setOpenTab] = useState<number>(1);
   useBeforeUnload(isDirty);
@@ -16,7 +18,7 @@ const TabMenu: React.FC = () => {
     const isRentSeat =
       location.pathname.startsWith("/rentseat/") &&
       location.pathname !== "/rentseat/";
-    // Eğer URL /rentseat/ ile başlıyorsa ve sadece /rentseat/ değilse, "Rent a Seat" sekmesini aç
+    // If the URL starts with /rentseat/ and not just /rentseat/, open the "Rent a Seat" tab
     setOpenTab(
       location.pathname === "/searchseat"
         ? 1
@@ -27,18 +29,20 @@ const TabMenu: React.FC = () => {
         : 1
     );
 
-    setIsDirty(isRentSeat); // Rent Seat sayfasına girildiyse eğer çıkılırsa bütün verilerin kaybolacağı uyarısını aktif et.
+    setIsDirty(isRentSeat); // If you have entered the Rent Seat page, activate the warning that all data will be lost if you exit.
   }, [location.pathname]);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Function to warn the user if the data will be deleted
     if (isDirty) {
-      if (
-        !window.confirm(
-          "If you switch to a different menu, all the operations you have done on this page will be cancelled."
-        )
-      ) {
+      const confirmed = window.confirm(
+        "If you switch to a different menu, all the operations you have done on this page will be cancelled. Do you want to continue?"
+      );
+
+      if (!confirmed) {
         e.preventDefault();
+      } else {
+        resetContextData();
       }
     }
   };
@@ -106,7 +110,7 @@ const TabItem = styled.li`
 const StyledLink = styled(Link)<{ $focused: boolean }>`
   ${tw`flex justify-center items-center text-xs font-bold uppercase px-5 py-3 shadow-lg rounded leading-normal`}
   ${({ $focused }) =>
-  $focused ? tw`text-white bg-indigo-400` : tw`text-black bg-white`}
+    $focused ? tw`text-white bg-indigo-400` : tw`text-black bg-white`}
   &:hover {
     ${tw`bg-indigo-400 text-white`}
   }
@@ -115,7 +119,7 @@ const StyledLink = styled(Link)<{ $focused: boolean }>`
 const StyledDiv = styled.div<{ $focused: boolean }>`
   ${tw`flex justify-center items-center text-xs font-bold uppercase px-5 py-3 shadow-lg rounded leading-normal`}
   ${({ $focused }) =>
-  $focused
+    $focused
       ? tw`text-white bg-indigo-400`
       : tw`text-gray-600 bg-gray-300 pointer-events-none`}
 `;

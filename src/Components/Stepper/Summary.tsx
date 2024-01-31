@@ -5,8 +5,8 @@ import tw from "twin.macro";
 import { useAppDataContext } from "../../context/AppDataContext";
 
 const Summary: React.FC = () => {
-  const { userFormData, seatFormData } = useAppDataContext();
-  console.log(seatFormData);
+  const { userFormData, seatData } = useAppDataContext();
+
   return (
     <>
       <TitlePLeft>Your Informations</TitlePLeft>
@@ -46,24 +46,24 @@ const Summary: React.FC = () => {
         {/* Rent Informations */}
         <GridDiv>
           <Label>Name</Label>
-          <InformationDiv>{seatFormData.name}</InformationDiv>
+          <InformationDiv>{seatData.name}</InformationDiv>
           <Label>Gender</Label>
-          <InformationDiv>{seatFormData.gender}</InformationDiv>
+          <InformationDiv>{seatData.gender}</InformationDiv>
           <Label>Email Address</Label>
-          <InformationDiv>{seatFormData.email}</InformationDiv>
+          <InformationDiv>{seatData.email}</InformationDiv>
           <Label>Age</Label>
-          <InformationDiv>{seatFormData.age}</InformationDiv>
+          <InformationDiv>{seatData.age}</InformationDiv>
         </GridDiv>
         <GridDiv>
           <Label>Surname</Label>
-          <InformationDiv>{seatFormData.surname}</InformationDiv>
+          <InformationDiv>{seatData.surname}</InformationDiv>
           <Label>Destination</Label>
-          <InformationDiv>{seatFormData.destination}</InformationDiv>
+          <InformationDiv>{seatData.destination}</InformationDiv>
           <Label>Cellphone Number</Label>
-          <InformationDiv>{seatFormData.phoneNumber}</InformationDiv>
+          <InformationDiv>{seatData.phoneNumber}</InformationDiv>
           <Label>Departure Time</Label>
           <InformationDiv>
-            {seatFormData.departureTime.toLocaleDateString()}
+            {seatData.departureTime.toLocaleString()}
           </InformationDiv>
         </GridDiv>
       </Container>

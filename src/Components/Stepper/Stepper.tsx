@@ -8,11 +8,7 @@ import SeatDetails from "./SeatDetails";
 import YourInfo from "./YourInfo";
 import Summary from "./Summary";
 
-interface StepperProps {
-  rentSeat: () => void;
-}
-
-const Stepper: React.FC<StepperProps> = ({rentSeat}) => {
+const Stepper: React.FC<{ rentSeat: () => void }> = ({ rentSeat }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [modelVisible, setModelVisible] = useState<boolean>(false);
 
@@ -108,9 +104,7 @@ const Stepper: React.FC<StepperProps> = ({rentSeat}) => {
               <NavigationButton onClick={() => setModelVisible(!modelVisible)}>
                 Cancel
               </NavigationButton>
-              <NavigationButton onClick={rentSeat}>
-                Confirm
-              </NavigationButton>
+              <NavigationButton onClick={rentSeat}>Confirm</NavigationButton>
             </ModalButtonContainer>
           </ModalHeader>
         </ContentContainer>

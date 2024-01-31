@@ -4,28 +4,14 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import tw from "twin.macro";
 
+import { ISeatItem } from "../types";
+import { useAppDataContext } from "../context/AppDataContext";
 import userIcon from "../assets/userIcon.png";
 
-interface ItemProps {
-  id: number;
-  name_surname: string;
-  departure_place: string;
-  departure_time: Date;
-  destination: string;
-  smoke: string;
-  estimated_arrival: string;
-}
-
-const SeatItem: React.FC<ItemProps> = ({
-  id,
-  name_surname,
-  departure_place,
-  departure_time,
-  destination,
-  smoke,
-  estimated_arrival,
-}) => {
+const SeatItem: React.FC<ISeatItem> = (props) => {
   const navigate = useNavigate();
+  const { updateSeatData } = useAppDataContext();
+
   return (
     <Container>
       <UserImage src={userIcon} alt="Default User Picture" />
@@ -33,33 +19,36 @@ const SeatItem: React.FC<ItemProps> = ({
         <InfoWrapper>
           <div>
             <Title>Name Surname</Title>
-            <Info>{name_surname}</Info>
+            <Info>{props.name + " " + props.surname}</Info>
           </div>
           <div>
             <Title>Departure Place</Title>
-            <Info>{departure_place}</Info>
+            <Info>{props.departurePlace}</Info>
           </div>
           <div>
             <Title>Departure Time</Title>
-            <Info>{departure_time.toLocaleString()}</Info>
+            <Info>{props.departureTime.toLocaleString()}</Info>
           </div>
           <div>
             <Title>Destination</Title>
-            <Info>{destination}</Info>
+            <Info>{props.destination}</Info>
           </div>
           <div>
             <Title>Smoking Allowed</Title>
-            <Info>{smoke}</Info>
+            <Info>{props.smokeAllow}</Info>
           </div>
           <div>
             <Title>Estimated Arrival</Title>
-            <Info>{estimated_arrival}</Info>
+            <Info>{props.estimatedArrival + " " + "Hours"}</Info>
           </div>
           <RentButtonDiv>
             <RentButton
               type="button"
               onClick={() => {
-                navigate(`/rentseat/${id}`);
+                navigate(`/rentseat/${props._id}`);
+                // Since we bring all the data of the seats in the SearchSeat component, if the "Rent" button of any seat is pressed, we transfer all props coming to the SeatItem to the seatData state of our context.
+                //In this way, the user can continue the rental process without sending a request to the server again.
+                updateSeatData({ ...props }); //
               }}
             >
               <span className="mr-1">
@@ -103,12 +92,12 @@ const Info = styled.div`
 `;
 
 const RentButtonDiv = styled.div`
-  ${tw`xl:pl-20 mt-2`} // mt-2 eklendi
+  ${tw`xl:pl-20 mt-2`}
 `;
 
 const RentButton = styled.button`
   &:hover {
     ${tw`bg-indigo-500 text-white`}
   }
-  ${tw`flex justify-center items-center  text-indigo-500 border border-indigo-500 font-bold uppercase text-base px-20 py-1 lg:px-6 lg:py-3 rounded-full outline-none mb-1 ease-linear transition-all duration-150`} // px-20 py-1 değişti
+  ${tw`flex justify-center items-center  text-indigo-500 border border-indigo-500 font-bold uppercase text-base px-20 py-1 lg:px-6 lg:py-3 rounded-full outline-none mb-1 ease-linear transition-all duration-150`}
 `;

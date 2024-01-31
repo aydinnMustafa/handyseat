@@ -1,30 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { useAppDataContext } from "../../context/AppDataContext";
 
 const YourInfo: React.FC = () => {
   const { userFormData, updateUserForm } = useAppDataContext();
-  const [errors, setErrors] = useState<{ [key: string]: string | null }>({});
-
-  const validateInput = (name: string, value: any) => {
-    if (name === "name" && !value) {
-      return "Name is required";
-    }
-    if (name === "surname" && !value) {
-      return "Surname is required";
-    }
-    if (name === "age" && value < 18) {
-      return "You must be over 18 years of age.";
-    }
-    if (name === "email" && !value) {
-      return "Email cannot be empty.";
-    }
-    if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      return "Incorrect E-mail address.";
-    }
-    return null;
-  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -35,12 +15,7 @@ const YourInfo: React.FC = () => {
     const { name, value } = e.target;
 
     updateUserForm({ ...userFormData, [name]: value });
-
-    const error = validateInput(name, value);
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
-
-  console.log(userFormData);
 
   return (
     <>
@@ -48,14 +23,12 @@ const YourInfo: React.FC = () => {
         {/* First four inputs */}
         <GridDiv>
           <Label>Name</Label>
-          {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
           <Input
             type="text"
             name="name"
             value={userFormData.name}
             onChange={handleChange}
             placeholder="Name"
-            $error={!!errors.name}
           />
 
           <Label>Gender</Label>
@@ -69,18 +42,15 @@ const YourInfo: React.FC = () => {
             <Option value="Other">Other</Option>
           </Select>
           <Label>Email Address</Label>
-          {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
           <Input
             type="text"
             name="email"
             value={userFormData.email}
             onChange={handleChange}
             placeholder="Email Address"
-            $error={!!errors.email}
           />
 
           <Label>Age</Label>
-          {errors.age && <ErrorMessage>{errors.age}</ErrorMessage>}
           <Input
             type="number"
             name="age"
@@ -92,27 +62,25 @@ const YourInfo: React.FC = () => {
         {/* Second four inputs */}
         <GridDiv>
           <Label>Surname</Label>
-          {errors.surname && <ErrorMessage>{errors.surname}</ErrorMessage>}
           <Input
             type="text"
             name="surname"
             value={userFormData.surname}
             onChange={handleChange}
             placeholder="Surname"
-            $error={!!errors.surname}
           />
           <Label>How many bags do you have?</Label>
           <RangeDiv>
-          <Input
-            type="range"
-            min={0}
-            max={5}
-            name="bagQuantity"
-            value={userFormData.bagQuantity}
-            onChange={handleChange}
-            placeholder="Number of Bags"
-          />
-          <Label>{userFormData.bagQuantity}</Label>
+            <Input
+              type="range"
+              min={0}
+              max={5}
+              name="bagQuantity"
+              value={userFormData.bagQuantity}
+              onChange={handleChange}
+              placeholder="Number of Bags"
+            />
+            <Label>{userFormData.bagQuantity}</Label>
           </RangeDiv>
           <Label>Cellphone Number</Label>
           <Input
@@ -203,8 +171,4 @@ const Textarea = styled.textarea`
     ${tw`outline-none ring ring-blue-500/40`}
   }
   ${tw`w-96 h-72 p-2 border border-gray-300 rounded-lg resize-none`}
-`;
-
-const ErrorMessage = styled.div`
-  ${tw`text-red-400 absolute mt-10 ml-2`}
 `;

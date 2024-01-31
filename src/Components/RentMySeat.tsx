@@ -5,12 +5,14 @@ import tw from "twin.macro";
 import DateTimePicker from "react-datetime-picker";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useAppDataContext } from "../context/AppDataContext";
 import axios from "axios";
 
 const RentMySeat: React.FC = () => {
-  const { seatFormData, updateSeatForm } = useAppDataContext();
+  const { seatData, updateSeatData, resetContextData } = useAppDataContext();
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -23,45 +25,62 @@ const RentMySeat: React.FC = () => {
     //Since smokeAllow should be boolean, we convert the type according to the value.
     const isAllowed = name === "smokeAllow" ? value === "Yes" : value;
 
-    updateSeatForm({ ...seatFormData, [name]: isAllowed });
+    updateSeatData({ ...seatData, [name]: isAllowed });
   };
 
-  const handleDateTimeChange = (newDate: Date | null) => { // Since it is datetime, I created a special handler
-    // Update the departureTime value of seatFormData
-    updateSeatForm({ ...seatFormData, departureTime: newDate });
+  const handleDateTimeChange = (newDate: Date | null) => {
+    // Since it is datetime, I created a special handler
+    // Update the departureTime value of seatData
+    if (newDate) {
+      updateSeatData({ ...seatData, departureTime: newDate });
+    }
   };
 
   const rentMySeatHandler = async () => {
+    const toastProgress = toast.loading(
+      "Please wait, your rental ad is being created..."
+    );
     try {
-      await axios.post(
-        "http://localhost:3000/api/rentmyseat",
-        {
-          name: seatFormData.name,
-          surname: seatFormData.surname,
-          gender: seatFormData.gender,
-          age: seatFormData.age,
-          email: seatFormData.email,
-          phoneNumber: seatFormData.phoneNumber,
+      await axios.post("http://localhost:3000/api/rentmyseat", {
+        name: seatData.name,
+        surname: seatData.surname,
+        gender: seatData.gender,
+        age: seatData.age,
+        email: seatData.email,
+        phoneNumber: seatData.phoneNumber,
 
-          carModel: seatFormData.carModel,
-          carType: seatFormData.carType,
-          smokeAllow: seatFormData.smokeAllow,
+        carModel: seatData.carModel,
+        carType: seatData.carType,
+        smokeAllow: seatData.smokeAllow,
 
-          travelingPeopleQuantity: seatFormData.travelingPeopleQuantity,
-          departurePlace: seatFormData.departurePlace,
-          departureTime: seatFormData.departureTime,
-          destination: seatFormData.destination,
-          estimatedArrival: seatFormData.estimatedArrival,
-        }
-      );
-    // WHAT TO DO IF THE POST IS SUCCESSFUL // WİLL BE ADDED
+        travelingPeopleQuantity: seatData.travelingPeopleQuantity,
+        departurePlace: seatData.departurePlace,
+        departureTime: seatData.departureTime,
+        destination: seatData.destination,
+        estimatedArrival: seatData.estimatedArrival,
+      });
+      resetContextData();
+      toast.update(toastProgress, {
+        render:
+          "Your ad has been created successfully. We will email you when someone creates a rental request.",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
     } catch (error) {
+      toast.update(toastProgress, {
+        render:
+          "An error has occured! Please make sure you entered all the information correctly and try again.",
+        type: "error",
+        isLoading: false,
+        autoClose: 4000,
+      });
       console.error("Error:", error);
     }
   };
-  console.log(seatFormData);
   return (
     <>
+      <ToastContainer />
       <PageDescriptionText>
         If your seat is rented, the details of the renter will be sent to the
         e-mail address you entered in the contact information. For this, please
@@ -76,7 +95,7 @@ const RentMySeat: React.FC = () => {
           <Input
             type="text"
             name="name"
-            value={seatFormData.name}
+            value={seatData.name}
             onChange={handleChange}
             placeholder="Name"
           />
@@ -84,16 +103,12 @@ const RentMySeat: React.FC = () => {
           <Input
             type="text"
             name="surname"
-            value={seatFormData.surname}
+            value={seatData.surname}
             onChange={handleChange}
             placeholder="Surname"
           />
           <Label>Gender</Label>
-          <Select
-            name="gender"
-            value={seatFormData.gender}
-            onChange={handleChange}
-          >
+          <Select name="gender" value={seatData.gender} onChange={handleChange}>
             <Option value="Male">Male</Option>
             <Option value="Female">Female</Option>
             <Option value="Other">Other</Option>
@@ -103,7 +118,7 @@ const RentMySeat: React.FC = () => {
           <Input
             type="number"
             name="age"
-            value={seatFormData.age}
+            value={seatData.age}
             onChange={handleChange}
             placeholder="Age"
           />
@@ -115,7 +130,7 @@ const RentMySeat: React.FC = () => {
           <Input
             type="text"
             name="carModel"
-            value={seatFormData.carModel}
+            value={seatData.carModel}
             onChange={handleChange}
             placeholder="Car Model"
           />
@@ -123,7 +138,7 @@ const RentMySeat: React.FC = () => {
           <Input
             type="text"
             name="carType"
-            value={seatFormData.carType}
+            value={seatData.carType}
             onChange={handleChange}
             placeholder="Car Type"
           />
@@ -131,14 +146,14 @@ const RentMySeat: React.FC = () => {
           <Input
             type="number"
             name="travelingPeopleQuantity"
-            value={seatFormData.travelingPeopleQuantity}
+            value={seatData.travelingPeopleQuantity}
             onChange={handleChange}
             placeholder="People Quantity"
           />
           <Label>Smoking Allowed</Label>
           <Select
             name="smokeAllow"
-            value={seatFormData.smokeAllow == true ? "Yes" : "No"}
+            value={seatData.smokeAllow == true ? "Yes" : "No"}
             onChange={handleChange}
           >
             <Option value="Yes">Yes</Option>
@@ -153,7 +168,7 @@ const RentMySeat: React.FC = () => {
           <Input
             type="text"
             name="departurePlace"
-            value={seatFormData.departurePlace}
+            value={seatData.departurePlace}
             onChange={handleChange}
             placeholder="Departure Place"
           />
@@ -162,7 +177,7 @@ const RentMySeat: React.FC = () => {
             disableClock={true}
             minDate={new Date()}
             onChange={handleDateTimeChange}
-            value={seatFormData.departureTime}
+            value={seatData.departureTime}
             locale="en-US"
             format="MM/dd/y h:mm a"
             required={true}
@@ -171,15 +186,15 @@ const RentMySeat: React.FC = () => {
           <Input
             type="text"
             name="destination"
-            value={seatFormData.destination}
+            value={seatData.destination}
             onChange={handleChange}
             placeholder="Destination"
           />
-          <Label>Estimated Arrival</Label>
+          <Label>Estimated Arrival(Please enter only the hour)</Label>
           <Input
             type="text"
             name="estimatedArrival"
-            value={seatFormData.estimatedArrival}
+            value={seatData.estimatedArrival}
             onChange={handleChange}
             placeholder="Hour and Minute"
           />
@@ -191,7 +206,7 @@ const RentMySeat: React.FC = () => {
           <Input
             type="number"
             name="phoneNumber"
-            value={seatFormData.phoneNumber}
+            value={seatData.phoneNumber}
             onChange={handleChange}
             placeholder="Cellphone Number"
           />
@@ -199,7 +214,7 @@ const RentMySeat: React.FC = () => {
           <Input
             type="text"
             name="email"
-            value={seatFormData.email}
+            value={seatData.email}
             onChange={handleChange}
             placeholder="Email Address"
           />

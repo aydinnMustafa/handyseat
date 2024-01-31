@@ -12,7 +12,7 @@ const rentMySeat = async (req: Request, res: Response) => {
       phoneNumber: req.body.phoneNumber,
 
       carModel: req.body.carModel,
-      carType: req.body.carModel,
+      carType: req.body.carType,
       smokeAllow: req.body.smokeAllow,
       travelingPeopleQuantity: req.body.travelingPeopleQuantity,
 
@@ -26,7 +26,7 @@ const rentMySeat = async (req: Request, res: Response) => {
 
     res.json(savedSeat);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "An error occurred while renting." });
   }
 };
@@ -69,8 +69,4 @@ const getSeats = async (req: Request, res: Response) => {
   }
 };
 
-const rentSeat = (req: Request, res: Response) => {
-  return res.send("RENT SEAT TEST");
-};
-
-export { getSeats, rentSeat, rentMySeat };
+export { getSeats, rentMySeat };

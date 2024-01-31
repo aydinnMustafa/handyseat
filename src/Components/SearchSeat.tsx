@@ -8,33 +8,14 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import ReactPaginate from "react-paginate";
 import SeatItem from "./SeatItem";
-
-interface SeatItem {
-  id: number;
-  name: string;
-  surname: string;
-  gender: string;
-  age: number;
-  email: string;
-  phoneNumber: number;
-
-  carModel: string;
-  carType: string;
-  smokeAllow: boolean;
-  travelingPeopleQuantity: number;
-
-  departurePlace: string;
-  departureTime: Date;
-  destination: string;
-  estimatedArrival: number;
-}
+import { ISeatItem } from "../types";
 
 const SearchSeat: React.FC = () => {
   const [searchDate, setSearchDate] = useState<DateRangeType>({
     startDate: null,
     endDate: null,
   });
-  const [data, setData] = useState<SeatItem[]>([]);
+  const [data, setData] = useState<ISeatItem[]>([]);
   const [pageCount, setPageCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
@@ -82,18 +63,26 @@ const SearchSeat: React.FC = () => {
             onChange={handleValueChange}
           />
         </DatePickerStyle>
-        <button onClick={fetchData}>TEST</button>
+        <SearchButton onClick={fetchData}>SEARCH</SearchButton>
       </SearchContainer>
       {data.map((seat) => (
         <SeatItem
-          key={seat.id}
-          id={seat.id}
-          name_surname={seat.name + seat.surname}
-          departure_place={seat.departurePlace}
-          departure_time={new Date(seat.departureTime)} // Since the data comes as a string, we convert it to date.
+          key={seat._id}
+          _id={seat._id}
+          name={seat.name}
+          surname={seat.surname}
+          departurePlace={seat.departurePlace}
+          departureTime={new Date(seat.departureTime)} // Since the data comes as a string, we convert it to date.
           destination={seat.destination}
-          smoke={seat.smokeAllow == true ? "Yes" : "No"}
-          estimated_arrival={seat.estimatedArrival.toString()}
+          smokeAllow={seat.smokeAllow === true ? "Yes" : "No"}
+          estimatedArrival={seat.estimatedArrival}
+          gender={seat.gender}
+          age={seat.age}
+          email={seat.email}
+          phoneNumber={seat.phoneNumber}
+          carModel={seat.carModel}
+          carType={seat.carType}
+          travelingPeopleQuantity={seat.travelingPeopleQuantity}
         />
       ))}
 
@@ -123,4 +112,11 @@ const CustomReactPaginate = styled(ReactPaginate)`
 
 const SearchContainer = styled.div`
   ${tw`flex space-x-12 justify-center`}
+`;
+
+const SearchButton = styled.button`
+  &:hover {
+    ${tw`bg-indigo-500 text-white`}
+  }
+  ${tw`flex justify-center items-center  text-indigo-500 border border-indigo-500 font-bold uppercase text-base px-20 py-1 lg:px-6 lg:py-3 rounded-md outline-none mb-1 ease-linear transition-all duration-150`}
 `;

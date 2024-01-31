@@ -4,46 +4,49 @@ import tw from "twin.macro";
 
 import { useAppDataContext } from "../../context/AppDataContext";
 
-
 const SeatDetails: React.FC = () => {
-  const { seatFormData } = useAppDataContext();
+  const { seatData } = useAppDataContext();
   return (
     <Container>
       <GridDiv>
         {/* Divs on the left */}
         <TitleP>Personal Informations</TitleP>
         <Label>Name</Label>
-        <InformationDiv>{seatFormData.name}</InformationDiv>
+        <InformationDiv>{seatData.name}</InformationDiv>
         <Label>Surname</Label>
-        <InformationDiv>{seatFormData.surname}</InformationDiv>
+        <InformationDiv>{seatData.surname}</InformationDiv>
         <Label>Gender</Label>
-        <InformationDiv>{seatFormData.gender}</InformationDiv>
+        <InformationDiv>{seatData.gender}</InformationDiv>
         <Label>Age</Label>
-        <InformationDiv>{seatFormData.age}</InformationDiv>
+        <InformationDiv>{seatData.age}</InformationDiv>
       </GridDiv>
       <GridDiv>
         {/* Divs in the middle*/}
         <TitleP>Car Informations</TitleP>
         <Label>Car Model</Label>
-        <InformationDiv>{seatFormData.carModel}</InformationDiv>
+        <InformationDiv>{seatData.carModel}</InformationDiv>
         <Label>Car Type</Label>
-        <InformationDiv>{seatFormData.carType}</InformationDiv>
+        <InformationDiv>{seatData.carType}</InformationDiv>
         <Label>How many people will be traveling in the car?</Label>
-        <InformationDiv>{seatFormData.travelingPeopleQuantity}</InformationDiv>
+        <InformationDiv>{seatData.travelingPeopleQuantity}</InformationDiv>
         <Label>Smoking Allowed</Label>
-        <InformationDiv>{seatFormData.smokeAllow}</InformationDiv>
+        <InformationDiv>{seatData.smokeAllow}</InformationDiv>
       </GridDiv>
       <GridDiv>
         {/* Divs on the right */}
         <TitleP>Seat Informations</TitleP>
         <Label>Departure Place</Label>
-        <InformationDiv>{seatFormData.departurePlace}</InformationDiv>
+        <InformationDiv>{seatData.departurePlace}</InformationDiv>
         <Label>Departure Time</Label>
-        <InformationDiv>{seatFormData.departureTime && seatFormData.departureTime.toLocaleDateString()}</InformationDiv>
+        <InformationDiv>
+          {seatData.departureTime.toLocaleString()}
+        </InformationDiv>
         <Label>Destination</Label>
-        <InformationDiv>{seatFormData.destination}</InformationDiv>
+        <InformationDiv>{seatData.destination}</InformationDiv>
         <Label>Estimated Arrival</Label>
-        <InformationDiv>{seatFormData.estimatedArrival}</InformationDiv>
+        <InformationDiv>
+          {seatData.estimatedArrival + " " + "Hours"}
+        </InformationDiv>
       </GridDiv>
     </Container>
   );

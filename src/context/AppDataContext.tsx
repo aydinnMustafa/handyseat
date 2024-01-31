@@ -1,49 +1,11 @@
-// AppDataContext.tsx
 import { createContext, useContext, useState, ReactNode } from "react";
+import { ISeatItem } from "../types";
+import { IAppDataContext, IUserFormData } from "../types";
 
-interface UserFormData {
-  name: string;
-  surname: string;
-  gender: string;
-  bagQuantity: number;
-  email: string;
-  phoneNumber: number;
-  age: number;
-  havePet: string;
-  extraTextArea: string;
-  isSubmit: boolean;
-}
-
-interface SeatFormData {
-  name: string;
-  surname: string;
-  gender: string;
-  age: number;
-  email: string;
-  phoneNumber: number;
-
-  carModel: string;
-  carType: string;
-  smokeAllow: boolean;
-  travelingPeopleQuantity: number;
-
-  departurePlace: string;
-  departureTime: null | Date;
-  destination: string;
-  estimatedArrival: number;
-}
-
-interface AppDataContextType {
-  userFormData: UserFormData;
-  seatFormData: SeatFormData;
-  updateUserForm: (data: UserFormData) => void;
-  updateSeatForm: (data: SeatFormData) => void;
-}
-
-const AppDataContext = createContext<AppDataContextType | undefined>(undefined);
+const AppDataContext = createContext<IAppDataContext | undefined>(undefined);
 
 export function AppDataProvider({ children }: { children: ReactNode }) {
-  const [userFormData, setUserFormData] = useState<UserFormData>({
+  const defaultUserFormData: IUserFormData = {
     name: "",
     surname: "",
     gender: "Male",
@@ -53,9 +15,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     age: 0,
     havePet: "No",
     extraTextArea: "",
-    isSubmit: false
-  });
-  const [seatFormData, setSeatFormData] = useState<SeatFormData>({
+  };
+
+  const defaultSeatData: ISeatItem = {
+    _id: "",
     name: "",
     surname: "",
     gender: "Male",
@@ -71,24 +34,34 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     departurePlace: "",
     departureTime: new Date(),
     destination: "",
-    estimatedArrival: new Date().getHours(),
-  });
+    estimatedArrival: 1,
+  };
 
-  const updateUserForm = (newData: UserFormData) => {
+  const [userFormData, setUserFormData] =
+    useState<IUserFormData>(defaultUserFormData);
+  const [seatData, setSeatData] = useState<ISeatItem>(defaultSeatData);
+
+  const updateUserForm = (newData: IUserFormData) => {
     setUserFormData(newData);
   };
 
-  const updateSeatForm = (newData: SeatFormData) => {
-    setSeatFormData(newData);
+  const updateSeatData = (newData: ISeatItem) => {
+    setSeatData(newData);
+  };
+
+  const resetContextData = () => {
+    setUserFormData(defaultUserFormData);
+    setSeatData(defaultSeatData);
   };
 
   return (
     <AppDataContext.Provider
       value={{
         userFormData,
-        seatFormData,
         updateUserForm,
-        updateSeatForm,
+        seatData,
+        updateSeatData,
+        resetContextData,
       }}
     >
       {children}
@@ -97,6 +70,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 }
 
 export function useAppDataContext() {
+  // To access the AppDataContext more easily, we define the useAppDataContext hook.
   const appDataContext = useContext(AppDataContext);
   if (!appDataContext) {
     throw new Error(
